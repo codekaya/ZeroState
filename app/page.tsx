@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Feedback, FeedbackCategory, useFeedbackStore, useUserStore } from "@/lib/store";
 import { getSemaphoreService } from "@/lib/semaphore";
-import { MessageSquare, TrendingUp, Clock, CheckCircle, Plus, Shield, UserCircle, BarChart3 } from "lucide-react";
+import { MessageSquare, TrendingUp, Users, Clock, Plus, Shield, UserCircle, BarChart3 } from "lucide-react";
 import Link from "next/link";
 
 const categories: { value: FeedbackCategory | 'all'; label: string; emoji: string }[] = [
@@ -31,8 +31,8 @@ export default function HomePage() {
   const [stats, setStats] = useState({
     total: 0,
     open: 0,
-    avgResponseTime: "4.2h",
-    satisfaction: "89%",
+    totalMembers: 0,
+    recent: 0, // Feedback from last 24 hours
   });
 
   useEffect(() => {
@@ -55,11 +55,30 @@ export default function HomePage() {
       // Calculate stats
       const total = feedbacks.length;
       const open = feedbacks.filter((f: Feedback) => f.status === 'open').length;
+      const now = new Date();
+      const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const recent = feedbacks.filter((f: Feedback) => {
+        const createdAt = new Date(f.created_at);
+        return createdAt >= oneDayAgo;
+      }).length;
+
+      // Fetch total members count
+      let totalMembers = 0;
+      try {
+        const membersRes = await fetch('/api/admin/stats');
+        if (membersRes.ok) {
+          const membersData = await membersRes.json();
+          totalMembers = membersData.totalMembers || 0;
+        }
+      } catch (e) {
+        // Ignore if stats endpoint fails
+      }
+
       setStats({
         total,
         open,
-        avgResponseTime: "4.2h",
-        satisfaction: "89%",
+        totalMembers,
+        recent,
       });
     } catch (error) {
       console.error("Error loading feedbacks:", error);
@@ -198,16 +217,16 @@ export default function HomePage() {
             description="Needs attention"
           />
           <StatsCard
-            title="Avg Response Time"
-            value={stats.avgResponseTime}
-            icon={Clock}
-            description="Staff response rate"
+            title="Total Members"
+            value={stats.totalMembers}
+            icon={Users}
+            description="Verified community members"
           />
           <StatsCard
-            title="Satisfaction"
-            value={stats.satisfaction}
-            icon={CheckCircle}
-            description="Member happiness"
+            title="Recent Activity"
+            value={stats.recent}
+            icon={Clock}
+            description="Last 24 hours"
           />
         </div>
 

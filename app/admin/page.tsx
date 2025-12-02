@@ -34,7 +34,7 @@ export default function AdminDashboard() {
     totalMembers: 0,
     totalFeedback: 0,
     openIssues: 0,
-    avgResponseTime: "4.2h",
+    recentFeedback: 0, // Last 24 hours
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -60,7 +60,12 @@ export default function AdminDashboard() {
       const statsData = await statsRes.json();
 
       setFeedbacks(feedbacksData);
-      setStats(statsData);
+      setStats({
+        totalMembers: statsData.totalMembers || 0,
+        totalFeedback: statsData.totalFeedback || 0,
+        openIssues: statsData.openIssues || 0,
+        recentFeedback: statsData.recentFeedback || 0,
+      });
     } catch (error) {
       console.error("Error loading admin data:", error);
     } finally {
@@ -135,10 +140,10 @@ export default function AdminDashboard() {
             description="Needs attention"
           />
           <StatsCard
-            title="Avg Response Time"
-            value={stats.avgResponseTime}
+            title="Recent Feedback"
+            value={stats.recentFeedback}
             icon={Clock}
-            description="Staff response rate"
+            description="Last 24 hours"
           />
         </div>
 
