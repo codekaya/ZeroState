@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/lib/store";
 import { getSemaphoreService } from "@/lib/semaphore";
 import { Shield, ArrowLeft, Loader2 } from "lucide-react";
+import { ZeroStateLogo } from "@/components/logo";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -89,8 +90,8 @@ export default function RegisterPage() {
 
         <div className="glass-card p-10 rounded-3xl border-0 fade-in-up">
           <div className="text-center mb-8">
-            <div className="mx-auto w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-3xl flex items-center justify-center mb-6 shadow-lg">
-              <Shield className="w-10 h-10 text-purple-600" />
+            <div className="mx-auto mb-6 flex justify-center">
+              <ZeroStateLogo size={80} variant="icon" animated={true} />
             </div>
             <h1 className="text-4xl font-bold text-gradient mb-3">Welcome</h1>
             <p className="text-gray-600 text-lg">

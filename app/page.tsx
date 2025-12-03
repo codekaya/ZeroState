@@ -13,6 +13,7 @@ import { Feedback, FeedbackCategory, useFeedbackStore, useUserStore } from "@/li
 import { getSemaphoreService } from "@/lib/semaphore";
 import { MessageSquare, TrendingUp, Users, Clock, Plus, Shield, UserCircle, BarChart3, ExternalLink, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { ZeroStateLogo } from "@/components/logo";
 
 const categories: { value: FeedbackCategory | 'all'; label: string; emoji: string }[] = [
   { value: "all", label: "All", emoji: "📋" },
@@ -147,11 +148,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gradient flex items-center gap-3">
-                <span className="text-4xl">🔒</span>
-                <span>ZeroState</span>
-              </h1>
-              <p className="text-sm text-gray-600 mt-1 ml-14 font-medium">Anonymous Feedback Forum</p>
+              <ZeroStateLogo size={40} variant="full" animated={true} />
             </div>
             
             <div className="flex items-center gap-4">
