@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
+// Import Member first to ensure it's registered before populate
+import Member from '@/lib/models/Member';
 import Reply from '@/lib/models/Reply';
 import { replyToFrontend } from '@/lib/db-helpers';
 

@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/stats-card";
 import { CensusCounter } from "@/components/census-counter";
 import { DemographicChart } from "@/components/demographic-chart";
-import { ArrowLeft, Users, TrendingUp, Activity, Loader2 } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Activity, Loader2, BarChart3 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface CensusData {
   totalMembers: number;
@@ -71,12 +72,18 @@ export default function CensusPage() {
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-xs text-gray-500 font-medium">Other Project:</span>
+                <Badge variant="outline" className="text-xs bg-purple-50 border-purple-200 text-purple-700">
+                  Separate Project
+                </Badge>
+              </div>
               <h1 className="text-3xl font-bold text-gradient flex items-center gap-3">
                 <span className="text-4xl">📊</span>
                 <span>zk-Census</span>
               </h1>
               <p className="text-sm text-gray-600 mt-1 ml-14 font-medium">
-                Privacy-preserving population analytics
+                Privacy-preserving population analytics for network states
               </p>
             </div>
             <Button
@@ -85,7 +92,7 @@ export default function CensusPage() {
               className="border-white/30 bg-white/20 hover:bg-white/30 text-purple-700 font-semibold"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+              Back to ZeroState
             </Button>
           </div>
         </div>

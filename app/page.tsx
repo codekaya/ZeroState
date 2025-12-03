@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Feedback, FeedbackCategory, useFeedbackStore, useUserStore } from "@/lib/store";
 import { getSemaphoreService } from "@/lib/semaphore";
-import { MessageSquare, TrendingUp, Users, Clock, Plus, Shield, UserCircle, BarChart3 } from "lucide-react";
+import { MessageSquare, TrendingUp, Users, Clock, Plus, Shield, UserCircle, BarChart3, ExternalLink, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const categories: { value: FeedbackCategory | 'all'; label: string; emoji: string }[] = [
@@ -163,14 +163,6 @@ export default function HomePage() {
                     <Plus className="w-4 h-4" />
                     New Feedback
                   </Button>
-                  <Button
-                    onClick={() => router.push("/census")}
-                    variant="outline"
-                    className="border-white/30 bg-white/20 hover:bg-white/30 text-purple-700 font-semibold"
-                  >
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    Census
-                  </Button>
                   {identitySecret && (
                     <Button
                       onClick={() => router.push("/passport")}
@@ -190,6 +182,32 @@ export default function HomePage() {
                       Admin
                     </Button>
                   )}
+                  <div className="relative group">
+                    <Button
+                      variant="outline"
+                      className="border-white/30 bg-white/20 hover:bg-white/30 text-purple-700 font-semibold"
+                    >
+                      Other Projects
+                      <ChevronDown className="w-4 h-4 ml-2" />
+                    </Button>
+                    <div className="absolute right-0 mt-2 w-56 glass-card rounded-2xl border-0 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                      <div className="p-2">
+                        <button
+                          onClick={() => router.push("/census")}
+                          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/50 transition-colors text-left"
+                        >
+                          <div className="p-2 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg">
+                            <BarChart3 className="w-5 h-5 text-purple-600" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-semibold text-gray-900">zk-Census</div>
+                            <div className="text-xs text-gray-600">Privacy-preserving population analytics</div>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-gray-400" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <Button onClick={() => router.push("/register")} className="btn-primary border-0 font-semibold px-8" size="lg">
@@ -228,29 +246,6 @@ export default function HomePage() {
             icon={Clock}
             description="Last 24 hours"
           />
-        </div>
-
-        {/* Live Census Widget */}
-        <div className="mb-12 fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <Link href="/census" className="block">
-            <div className="glass-card p-6 rounded-3xl border-0 hover:scale-[1.02] transition-transform cursor-pointer group">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="p-4 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl group-hover:scale-110 transition-transform">
-                    <BarChart3 className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">Live zk-Census</h3>
-                    <p className="text-sm text-gray-600">Real-time population count with ZK proofs</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-gradient">→</div>
-                  <p className="text-xs text-gray-500 mt-1">View Dashboard</p>
-                </div>
-              </div>
-            </div>
-          </Link>
         </div>
 
         {/* Quick Actions */}

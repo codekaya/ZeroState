@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
+import mongoose from 'mongoose';
+// Import Member first to ensure it's registered before Feedback uses it in populate
+import Member from '@/lib/models/Member';
 import Feedback from '@/lib/models/Feedback';
 import Reply from '@/lib/models/Reply';
-import Member from '@/lib/models/Member';
 import { feedbackToFrontend, replyToFrontend } from '@/lib/db-helpers';
 
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
+
+    // Ensure Member model is registered before populate
+    if (!mongoose.models.Member) {
+      await import('@/lib/models/Member');
+    }
 
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
