@@ -47,9 +47,13 @@ export default function HomePage() {
         : '/api/feedback';
       
       const response = await fetch(url);
-      if (!response.ok) throw new Error('Failed to fetch feedbacks');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to fetch feedbacks: ${response.status}`);
+      }
       
-      const { feedbacks } = await response.json();
+      const data = await response.json();
+      const feedbacks = data.feedbacks || [];
       setFeedbacks(feedbacks as Feedback[]);
       
       // Calculate stats
@@ -72,6 +76,7 @@ export default function HomePage() {
         }
       } catch (e) {
         // Ignore if stats endpoint fails
+        console.warn('Failed to fetch member stats:', e);
       }
 
       setStats({
@@ -80,8 +85,9 @@ export default function HomePage() {
         totalMembers,
         recent,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading feedbacks:", error);
+      // Don't show alert for initial load, just log
     } finally {
       setIsLoading(false);
     }
@@ -113,8 +119,8 @@ export default function HomePage() {
       });
       
       if (!response.ok) {
-        const { error } = await response.json();
-        alert(error || 'Failed to upvote');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        alert(errorData.error || `Failed to upvote: ${response.status}`);
         return;
       }
       

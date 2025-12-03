@@ -1,8 +1,8 @@
 import { Identity } from '@semaphore-protocol/identity';
 import { getSemaphoreService } from './semaphore';
 import connectDB from './mongodb';
+// Import Member first to ensure it's registered
 import Member from './models/Member';
-import { memberToFrontend } from './db-helpers';
 
 export interface PassportAttributes {
   skills?: string[];

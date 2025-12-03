@@ -74,8 +74,8 @@ export function FeedbackForm({ onSuccess }: FeedbackFormProps) {
       });
       
       if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || 'Failed to submit feedback');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to submit feedback: ${response.status}`);
       }
       
       // Reset form

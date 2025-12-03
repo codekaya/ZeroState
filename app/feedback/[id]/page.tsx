@@ -42,13 +42,21 @@ export default function FeedbackDetailPage() {
   const loadFeedbackDetails = async () => {
     try {
       const response = await fetch(`/api/feedback/${feedbackId}`);
-      if (!response.ok) throw new Error('Failed to fetch feedback');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to fetch feedback: ${response.status}`);
+      }
       
-      const { feedback: feedbackData, replies: repliesData } = await response.json();
-      setFeedback(feedbackData as Feedback);
-      setReplies(repliesData as Reply[]);
-    } catch (error) {
+      const data = await response.json();
+      if (!data.feedback) {
+        throw new Error('Feedback data not found in response');
+      }
+      
+      setFeedback(data.feedback as Feedback);
+      setReplies((data.replies || []) as Reply[]);
+    } catch (error: any) {
       console.error("Error loading feedback:", error);
+      alert(`Failed to load feedback: ${error.message || 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -78,8 +86,8 @@ export default function FeedbackDetailPage() {
       });
 
       if (!response.ok) {
-        const { error } = await response.json();
-        alert(error || 'Failed to upvote');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        alert(errorData.error || `Failed to upvote: ${response.status}`);
         return;
       }
 
@@ -126,8 +134,8 @@ export default function FeedbackDetailPage() {
       });
 
       if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || 'Failed to submit reply');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to submit reply: ${response.status}`);
       }
 
       // Reset form

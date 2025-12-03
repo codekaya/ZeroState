@@ -45,21 +45,36 @@ export default function PassportPage() {
   }, [memberId, identitySecret, router]);
 
   const loadPassport = async () => {
-    if (!memberId) return;
+    if (!memberId) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(`/api/passport/${memberId}`);
-      if (!response.ok) throw new Error('Failed to load passport');
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to load passport: ${response.status}`);
+      }
 
-      const { passport: passportData } = await response.json();
+      const data = await response.json();
+      
+      if (!data.passport) {
+        throw new Error('Passport data not found in response');
+      }
+
+      const passportData = data.passport;
       setPassport(passportData);
       setEditedAttributes({
-        skills: passportData.attributes.skills || [],
-        location: passportData.attributes.location || '',
-        ageRange: passportData.attributes.ageRange || '',
+        skills: passportData.attributes?.skills || [],
+        location: passportData.attributes?.location || '',
+        ageRange: passportData.attributes?.ageRange || '',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading passport:', error);
+      // Show user-friendly error
+      alert(`Failed to load passport: ${error.message || 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -82,14 +97,17 @@ export default function PassportPage() {
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to save');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to save: ${response.status}`);
+      }
 
       setIsEditing(false);
-      loadPassport();
+      await loadPassport();
       alert('Passport updated successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving passport:', error);
-      alert('Failed to save passport');
+      alert(`Failed to save passport: ${error.message || 'Unknown error'}`);
     } finally {
       setIsSaving(false);
     }

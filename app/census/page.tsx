@@ -54,13 +54,21 @@ export default function CensusPage() {
   const loadCensusData = async () => {
     try {
       const response = await fetch('/api/census/stats');
-      if (!response.ok) throw new Error('Failed to fetch census data');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to fetch census data: ${response.status}`);
+      }
       
       const data = await response.json();
+      if (!data) {
+        throw new Error('Empty response from census API');
+      }
+      
       setStats(data);
       setLastUpdate(new Date());
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading census data:', error);
+      // Don't show alert, just log - census is optional
     } finally {
       setIsLoading(false);
     }

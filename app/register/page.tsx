@@ -46,11 +46,12 @@ export default function RegisterPage() {
       });
       
       if (!response.ok) {
-        const { error } = await response.json();
-        if (error.includes('already registered') || error.includes('duplicate')) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        const errorMessage = errorData.error || `Registration failed: ${response.status}`;
+        if (errorMessage.includes('already registered') || errorMessage.includes('duplicate')) {
           alert("Email already registered!");
         } else {
-          throw new Error(error);
+          alert(`Registration failed: ${errorMessage}`);
         }
         return;
       }

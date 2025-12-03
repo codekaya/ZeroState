@@ -54,20 +54,29 @@ export default function AdminDashboard() {
         fetch('/api/admin/stats'),
       ]);
 
-      if (!feedbacksRes.ok || !statsRes.ok) throw new Error('Failed to load data');
+      if (!feedbacksRes.ok) {
+        const errorData = await feedbacksRes.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to load feedbacks: ${feedbacksRes.status}`);
+      }
 
-      const { feedbacks: feedbacksData } = await feedbacksRes.json();
+      if (!statsRes.ok) {
+        const errorData = await statsRes.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to load stats: ${statsRes.status}`);
+      }
+
+      const feedbacksData = await feedbacksRes.json();
       const statsData = await statsRes.json();
 
-      setFeedbacks(feedbacksData);
+      setFeedbacks(feedbacksData.feedbacks || []);
       setStats({
         totalMembers: statsData.totalMembers || 0,
         totalFeedback: statsData.totalFeedback || 0,
         openIssues: statsData.openIssues || 0,
         recentFeedback: statsData.recentFeedback || 0,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading admin data:", error);
+      alert(`Failed to load admin data: ${error.message || 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +90,10 @@ export default function AdminDashboard() {
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!response.ok) throw new Error('Failed to update status');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to update status: ${response.status}`);
+      }
 
       // Update local state
       setFeedbacks(feedbacks.map(f => 
