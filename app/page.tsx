@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Feedback, FeedbackCategory, useFeedbackStore, useUserStore } from "@/lib/store";
 import { getSemaphoreService } from "@/lib/semaphore";
-import { MessageSquare, TrendingUp, Users, Clock, Plus, Shield, UserCircle, BarChart3, ExternalLink, ChevronDown } from "lucide-react";
+import { MessageSquare, TrendingUp, Users, Clock, Plus, Shield, UserCircle, BarChart3, ExternalLink, ChevronDown, LogOut } from "lucide-react";
 import Link from "next/link";
 import { ZeroStateLogo } from "@/components/logo";
 
@@ -27,7 +27,7 @@ const categories: { value: FeedbackCategory | 'all'; label: string; emoji: strin
 export default function HomePage() {
   const router = useRouter();
   const { feedbacks, setFeedbacks, selectedCategory, setSelectedCategory } = useFeedbackStore();
-  const { identitySecret, memberName, isAdmin } = useUserStore();
+  const { identitySecret, memberName, isAdmin, clearIdentity } = useUserStore();
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
     total: 0,
@@ -141,6 +141,13 @@ export default function HomePage() {
     router.push(`/feedback/${id}`);
   };
 
+  const handleLogout = () => {
+    if (confirm("Are you sure you want to log out? Your identity will be cleared from this device.")) {
+      clearIdentity();
+      router.push("/");
+    }
+  };
+
   return (
     <div className="min-h-screen gradient-bg">
       {/* Header */}
@@ -165,6 +172,14 @@ export default function HomePage() {
                   >
                     <Plus className="w-4 h-4" />
                     New Feedback
+                  </Button>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    className="border-white/30 bg-white/20 hover:bg-white/30 text-purple-700 font-semibold"
+                    title="Log out"
+                  >
+                    <LogOut className="w-4 h-4" />
                   </Button>
                   {identitySecret && (
                     <Button

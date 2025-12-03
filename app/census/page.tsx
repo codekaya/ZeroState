@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/stats-card";
 import { CensusCounter } from "@/components/census-counter";
 import { DemographicChart } from "@/components/demographic-chart";
-import { ArrowLeft, Users, TrendingUp, Activity, Loader2, BarChart3 } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Activity, Loader2, BarChart3, LogOut } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useUserStore } from "@/lib/store";
 
 interface CensusData {
   totalMembers: number;
@@ -37,6 +38,7 @@ interface CensusStats {
 
 export default function CensusPage() {
   const router = useRouter();
+  const { clearIdentity } = useUserStore();
   const [stats, setStats] = useState<CensusStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
@@ -94,14 +96,29 @@ export default function CensusPage() {
                 Privacy-preserving population analytics for network states
               </p>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => router.push("/")}
-              className="border-white/30 bg-white/20 hover:bg-white/30 text-purple-700 font-semibold"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to ZeroState
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                onClick={() => router.push("/")}
+                className="border-white/30 bg-white/20 hover:bg-white/30 text-purple-700 font-semibold"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to ZeroState
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm("Are you sure you want to log out?")) {
+                    clearIdentity();
+                    router.push("/");
+                  }
+                }}
+                className="border-white/30 bg-white/20 hover:bg-red-50 text-red-600 hover:text-red-700"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>

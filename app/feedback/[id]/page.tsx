@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Feedback, Reply, useUserStore } from "@/lib/store";
 import { getSemaphoreService } from "@/lib/semaphore";
 import { formatTimeAgo } from "@/lib/utils";
-import { ArrowLeft, User, Shield, ThumbsUp, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, User, Shield, ThumbsUp, Send, Loader2, LogOut } from "lucide-react";
 
 const categoryEmojis = {
   facilities: "🏠",
@@ -27,7 +27,7 @@ export default function FeedbackDetailPage() {
   const params = useParams();
   const feedbackId = params.id as string;
   
-  const { identitySecret, memberId, memberName } = useUserStore();
+  const { identitySecret, memberId, memberName, clearIdentity } = useUserStore();
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [replies, setReplies] = useState<Reply[]>([]);
   const [isLoading, setIsLoading] = useState(true);

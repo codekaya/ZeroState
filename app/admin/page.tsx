@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/stats-card";
 import { Badge } from "@/components/ui/badge";
 import { useUserStore } from "@/lib/store";
-import { Users, MessageSquare, TrendingUp, Clock, ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { Users, MessageSquare, TrendingUp, Clock, ArrowLeft, CheckCircle, XCircle, LogOut } from "lucide-react";
 import { formatTimeAgo } from "@/lib/utils";
 
 interface FeedbackWithDetails {
@@ -28,7 +28,7 @@ interface FeedbackWithDetails {
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const { identitySecret, isAdmin } = useUserStore();
+  const { identitySecret, isAdmin, clearIdentity } = useUserStore();
   const [feedbacks, setFeedbacks] = useState<FeedbackWithDetails[]>([]);
   const [stats, setStats] = useState({
     totalMembers: 0,
@@ -122,10 +122,25 @@ export default function AdminDashboard() {
               </h1>
               <p className="text-sm text-gray-600">Manage feedback and monitor your network state</p>
             </div>
-            <Button variant="outline" onClick={() => router.push("/")}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" onClick={() => router.push("/")}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  if (confirm("Are you sure you want to log out?")) {
+                    clearIdentity();
+                    router.push("/");
+                  }
+                }}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>

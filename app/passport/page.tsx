@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PassportCard } from "@/components/passport-card";
 import { useUserStore } from "@/lib/store";
-import { ArrowLeft, Loader2, Edit, Save } from "lucide-react";
+import { ArrowLeft, Loader2, Edit, Save, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -25,7 +25,7 @@ interface PassportData {
 
 export default function PassportPage() {
   const router = useRouter();
-  const { memberId, memberName, identitySecret } = useUserStore();
+  const { memberId, memberName, identitySecret, clearIdentity } = useUserStore();
   const [passport, setPassport] = useState<PassportData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -156,14 +156,29 @@ export default function PassportPage() {
   return (
     <div className="min-h-screen gradient-bg py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => router.push("/")}
-          className="mb-8 glass-card border-0"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Home
-        </Button>
+        <div className="flex items-center justify-between mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/")}
+            className="glass-card border-0"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              if (confirm("Are you sure you want to log out?")) {
+                clearIdentity();
+                router.push("/");
+              }
+            }}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
 
         <div className="flex items-center justify-between mb-6">
           <div>
