@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/lib/store";
 import { getSemaphoreService } from "@/lib/semaphore";
-import { Shield, ArrowLeft, Loader2 } from "lucide-react";
+import { Shield, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { ZeroStateLogo } from "@/components/logo";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -24,7 +25,10 @@ export default function RegisterPage() {
     e.preventDefault();
     
     if (!formData.name || !formData.email) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields", {
+        description: "Name and email are required to create your identity",
+        duration: 3000,
+      });
       return;
     }
     
@@ -50,9 +54,15 @@ export default function RegisterPage() {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
         const errorMessage = errorData.error || `Registration failed: ${response.status}`;
         if (errorMessage.includes('already registered') || errorMessage.includes('duplicate')) {
-          alert("Email already registered!");
+          toast.error("Email already registered", {
+            description: "This email is already associated with an account. Please use a different email.",
+            duration: 4000,
+          });
         } else {
-          alert(`Registration failed: ${errorMessage}`);
+          toast.error("Registration failed", {
+            description: errorMessage,
+            duration: 4000,
+          });
         }
         return;
       }
@@ -65,12 +75,23 @@ export default function RegisterPage() {
       // Save identity locally
       setIdentity(secret, member.id, formData.name);
       
-      alert(`✅ Welcome ${formData.name}! Your identity has been created securely.`);
-      router.push("/");
+      toast.success(`Welcome ${formData.name}!`, {
+        description: "Your zero-knowledge identity has been created securely. You can now post feedback anonymously.",
+        duration: 5000,
+        icon: <CheckCircle2 className="w-5 h-5" />,
+      });
+      
+      // Navigate after a short delay to let user see the success message
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
       
     } catch (error: any) {
       console.error("Registration error:", error);
-      alert("Registration failed. Please try again.");
+      toast.error("Registration failed", {
+        description: "An unexpected error occurred. Please try again.",
+        duration: 4000,
+      });
     } finally {
       setIsRegistering(false);
     }

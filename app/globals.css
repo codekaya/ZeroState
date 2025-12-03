@@ -265,19 +265,96 @@ button:active:not(:disabled) {
   }
 }
 
-/* Toast notifications (sonner) customization */
+/* Toast notifications (sonner) customization - ZeroState Theme */
 [data-sonner-toast] {
   font-family: inherit;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 1rem !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  font-weight: 500;
 }
 
 [data-sonner-toast][data-type="success"] {
-  background-color: #10b981 !important;
-  border-color: #059669 !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-sonner-toast][data-type="success"] [data-title] {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+}
+
+[data-sonner-toast][data-type="success"] [data-description] {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.875rem !important;
 }
 
 [data-sonner-toast][data-type="error"] {
-  background-color: #ef4444 !important;
-  border-color: #dc2626 !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-sonner-toast][data-type="error"] [data-title] {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+}
+
+[data-sonner-toast][data-type="error"] [data-description] {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.875rem !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(139, 92, 246, 0.95) 100%) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-sonner-toast][data-type="info"] [data-title] {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+[data-sonner-toast][data-type="info"] [data-description] {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-sonner-toast] [data-icon] {
+  color: white !important;
+}
+
+[data-sonner-toast] [data-close-button] {
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+/* Toast animation improvements */
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+[data-sonner-toast] {
+  animation: toast-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Safe area insets for iOS */

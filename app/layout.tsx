@@ -29,7 +29,19 @@ export default function RootLayout({
         <div className="min-h-screen bg-gray-50">
           {children}
         </div>
-        <Toaster position="top-center" />
+        <Toaster 
+          position="top-center" 
+          richColors
+          closeButton
+          toastOptions={{
+            style: {
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+            },
+            className: 'zerostate-toast',
+          }}
+        />
       </body>
     </html>
   );
